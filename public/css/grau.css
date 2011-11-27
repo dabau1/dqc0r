@@ -26,7 +26,7 @@ button:hover, select:hover {
     background-image: url('');
     background-color: #aaa;
 }
-button:active, select:active {
+button:active {
     background-image: url('');
     background-color: #888;
 }
