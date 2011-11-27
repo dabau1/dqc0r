@@ -79,10 +79,12 @@ post '/login' => sub {
     my $pass    = md5_sum( $self->param('pass') );
     my $dbh     = $self->dbh;
     $self->stash( error => '' );
-    my @admindata = $dbh->selectrow_array(
-'SELECT ben_admin, ben_status, ben_news, ben_id FROM ben_benutzer WHERE lower(ben_user)=lower(?) AND ben_pw=?',
-        undef, $user, $pass
-    );
+    my $sql = << 'EOSQL';
+SELECT ben_admin, ben_status, ben_news, ben_id i
+FROM ben_benutzer 
+WHERE lower(ben_user)=lower(?) AND ben_pw=?
+EOSQL
+    my @admindata = $dbh->selectrow_array( $sql, undef, $user, $pass );
     unless (@admindata) {
         $self->render( 'login_form', error => 'Anmeldung fehlgeschlagen' );
         return;
@@ -96,7 +98,13 @@ post '/login' => sub {
         news     => $admindata[2],
         userid   => $admindata[3],
     );
-    $session->{tex_id} = $dbh->selectrow_arrayref('SELECT max(tex_id) FROM tex_text')->[0] // 0;
+    $sql = << 'EOSQL';
+SELECT tex_id 
+FROM tex_text 
+ORDER BY tex_id DESC 
+LIMIT 1 OFFSET 10
+EOSQL
+    $session->{tex_id} = $dbh->selectrow_arrayref($sql)->[0] // 0;
     my $sql = << 'EOSQL';
 UPDATE ben_benutzer 
 SET 
