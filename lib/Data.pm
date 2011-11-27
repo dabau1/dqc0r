@@ -6,16 +6,16 @@ use utf8;
 use DBI;
 
 our $helpmsg = << 'EOHELP';
-[code]Nachrichten-Commandos:
+[b]Nachrichten-Commandos:[/b][code]
     /help           : Dreimal darfst du raten
     /b, /u, /i      : Fette, shiefe oder unterstrichene Zeile
     /set_refresh ## : Refresh-Frequenz auf ## setzen
     /news           : Notiz für die rechte Seitenspalte
     /online         : Setzt den Status auf online
     /away           : Setzt den Status auf away
-    /busy           : Setzt den Status auf busy
+    /busy           : Setzt den Status auf busy[/code]
 
-BBCodes:
+[b]BBCodes:[/b][code]
     url  : Link erzeugen zum wo drauf klicken
     img  : Da wird ein Bild angezeigt
     b    : Fettschreiben
