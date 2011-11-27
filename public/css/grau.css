@@ -19,6 +19,9 @@ button, select {
     padding: 1px;
     margin: 1px;
 }
+button, select, input[type="checkbox"] {
+    cursor: pointer;
+}
 button:hover, select:hover {
     background-image: url('');
     background-color: #aaa;
@@ -29,8 +32,9 @@ button[disabled="disabled"] {
     background-color: #bbb;
     text-shadow: none;
     background-image: url('');
+    cursor: auto;
 }
-button[disabled="disabled"]:focus {
+button[disabled="disabled"]:hover {
     color: #999;
     background-color: #bbb;
 }
