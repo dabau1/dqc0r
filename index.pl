@@ -51,6 +51,8 @@ my %german_status = (
     }
 }
 
+any '/' => sub { $_[0]->redirect_to('login_form') };
+
 any '/logout' => sub {
     my $self    = shift;
     my $session = $self->session;
@@ -334,8 +336,6 @@ EOSQL
     $self->render( json => { msgs => $msgs, buddies => $users, notes => $notes } );
 }
 get '/refresh' => sub {refresh(@_)};
-
-get '/' => sub { $_[0]->render('chat') };
 
 app->start;
 
