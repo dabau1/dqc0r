@@ -1,0 +1,13 @@
+% layout 'login';
+% title 'DQC-Cheat0r Login';
+% if ( $error ) {
+<p><%= $error %></p>
+% }
+%= form_for login => (method => 'post') => begin
+<table>
+    <tr><td>Benutzer:</td><td><input type="text" name="user" class="loginfield" /></td></tr>
+    <tr><td>Passwort:</td><td><input type="password" name="pass" class="loginfield" /></td></tr>
+    <tr><td></td><td><input type="submit" value="anmelden" /></td></tr>
+</table>
+% end
+

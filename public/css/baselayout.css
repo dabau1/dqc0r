@@ -1,0 +1,44 @@
+* {
+    padding: 1px;
+    margin: 0;
+}
+body {
+    width: 800px;
+    margin: 0 auto;
+}
+#msg, #chatbox {
+    width: 512px;
+}
+#chatbox img {
+    width: 96px;
+    height: 48px;
+}
+.textarea {
+    height: 380px;
+}
+#msg {
+    height: 28px;
+}
+#buddylist, .loginfield, #sidepane, #status, #mm {
+    width: 128px;
+}
+#buddylist {
+    overflow: hidden;
+}
+#chatbox {
+    overflow: auto;
+}
+#sidepane {
+    height: 480px;
+}
+a {
+    background-color: transparent;
+    display: inline;
+    text-decoration: underline;
+    cursor: pointer;
+    border-width: 0px;
+}
+#mybbbuttons {
+    display: inline;
+}
+

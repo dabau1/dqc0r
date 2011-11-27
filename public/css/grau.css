@@ -1,0 +1,96 @@
+@import "baselayout.css";
+body {
+    background-color: #ccc;
+    color: #111;
+    background-image: url('../img/bg.png');
+    background-repeat: repeat-y;
+}
+button, select {
+    text-shadow: #fff 0px 0px 2px;
+    background-color: #fff;
+    background-image: url('../img/button.png');
+    background-repeat: repeat-x;
+    background-position: bottom;
+    border: 1px #999 solid;
+    color: #333;
+    font-size: smaller;
+    text-shadow: #fff 0px 0px 2px;
+    -moz-border-radius: 2px;
+    padding: 1px;
+    margin: 1px;
+}
+button:hover, select:hover {
+    background-image: url('');
+    background-color: #aaa;
+}
+button[disabled="disabled"] {
+    color: #999;
+    border-color: #aaa;
+    background-color: #bbb;
+    text-shadow: none;
+    background-image: url('');
+}
+button[disabled="disabled"]:focus {
+    color: #999;
+    background-color: #bbb;
+}
+.textarea, input[type="text"], input[type="password"], #msg {
+    border: 1px #999 solid;
+    text-shadow: none;
+    -moz-border-radius: 2px;
+}
+#chatbox {
+    background-color: #eee;
+    background-image: url('../img/tbg.png');
+    background-repeat: no-repeat;
+    background-position: bottom right;
+}
+#buddylist {
+    background-color: #ddd;
+}
+#msg, .loginfield {
+    background-color: #fff;
+}
+a {
+    color: #36c;
+}
+a:hover {
+    color: #69f;
+}
+    
+.own_msg {
+    color: #996;
+}
+.StatusMsg, .Away, .Busy {
+    font-style: italic;
+}
+.Online { 
+    color: #0c3;
+}
+.Away {
+    color: #ff7f50;
+}
+.Busy {
+    color: #f00;
+}
+.Refresh, .timestamp, .nick {
+    color: #999;
+}
+.timestamp, .note {
+    font-size: smaller;
+}
+.nick {
+    font-weight: bolder;
+}
+.note, #sidepane {
+    border: 0px #bbb dashed;
+}
+.note {
+    border-bottom-width: 1px;
+    color: #999;
+    padding: .2em 0;
+}
+#sidepane {
+    border-top-width: 1px;
+}
+
