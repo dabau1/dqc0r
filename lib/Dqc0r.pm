@@ -42,9 +42,9 @@ sub startup {
     $r->route('/')->to('auth#login_form');
     $r->route('/logout')->to('auth#logout');
     $r->route('/login')->to('auth#login');
-    my $u = $r->under('auth#check_login');
-    $r->route('/refresh')->to('refresh#refresh');
-    $r->route('/msg')->to('msg#msg');
+    my $b = $r->bridge()->to('auth#check_login');
+    $b->route('/refresh')->to('refresh#refresh');
+    $b->route('/msg')->to('msg#msg');
 
 }
 
