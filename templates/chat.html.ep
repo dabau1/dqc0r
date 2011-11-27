@@ -21,7 +21,7 @@
     <tr>
         <td>
             <div class="textarea" id="chatbox">
-                <p class="StatusMsg">Petri Heil Ganove ....der Plautzbär sagt Hallo!! (/? für Hilfe)</p>
+                <p class="StatusMsg">Petri Heil Ganove ....der Plautzbär sagt Hallo!! (<b>/help</b> für Hilfe)</p>
             </div>
         </td>
         <td>

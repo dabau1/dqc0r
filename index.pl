@@ -4,6 +4,25 @@ use DBI;
 use Mojo::Util qw(md5_sum html_escape);
 use utf8;
 
+my $helpmsg = << 'EOHELP';
+[code]Nachrichten-Commandos:
+    /help           : Dreimal darfst du raten
+    /b, /u, /i      : Fette, shiefe oder unterstrichene Zeile
+    /set_refresh ## : Refresh-Frequenz auf ## setzen
+    /news           : Notiz für die rechte Seitenspalte
+    /online         : Setzt den Status auf online
+    /away           : Setzt den Status auf away
+    /busy           : Setzt den Status auf busy
+
+BBCodes:
+    url  : Link erzeugen zum wo drauf klicken
+    img  : Da wird ein Bild angezeigt
+    b    : Fettschreiben
+    u    : Unterschreiben
+    i    : Schiefschreiben
+    code : Breitengleiche vordefinierte Schrift[/code]
+EOHELP
+
 app->secret('asjdfhoae jb<F3>.o84u9iqw');
 my $config = plugin JSONConfig => { file => '../../etc/dqc0r.conf' };
 
@@ -159,6 +178,10 @@ EOSQL
         $txt = "» $session->{user} hat eine Notiz hinterlassen";
         return $txt, 1;
     },
+    help => sub {
+        my ( $self, $txt ) = @_;
+        return $helpmsg, 2, $self->session->{user};
+    },
     (   # Online, Busy, Away
         map { 
             my ($st, $k) = ( $_->[0], $_->[1] ); 
@@ -179,13 +202,14 @@ our %admincommands = (
 
 sub command_parsing {
     my ( $self, $msg ) = @_;
-    return $msg, 0 unless $msg =~ m~\A/(\w+)(?:\s+(.*))?\z~xms;
+    return $msg, 0, '' unless $msg =~ m~\A/(\w+)(?:\s+(.*))?\z~xms;
     my ( $cmd, $txt ) = ( $1, $2 // '' );
-    return $msg, 0 unless exists $commands{$cmd};
-    my ( $nmsg, $kat ) = $commands{$cmd}( $self, $txt );
+    return $msg, 0, '' unless exists $commands{$cmd};
+    my ( $nmsg, $kat, $an ) = $commands{$cmd}( $self, $txt );
     $msg = $nmsg // $msg;
-    $kat = $kat  // 0;
-    return $msg, $kat;
+    $kat //= 0;
+    $an  //= '';
+    return $msg, $kat, $an;
 }
 
 sub get_timestamp_for_db {
@@ -220,22 +244,23 @@ post '/msg' => sub {
     my $user    = $session->{user};
     my $msg     = $self->param('msg');
     chomp($msg);
-    if ( 2 > length $msg ) {
+    my $laenge = length $msg;
+    if ( 2 > $laenge ) {
         refresh($self);
         return;
     }
-    my $kat     = 0;
-    my $laenge  = length $msg;
+    my $kat    = 0;
+    my $an     = '';
     local %commands = ( %commands, %admincommands ) if $session->{admin};
-    ( $msg, $kat ) = command_parsing( $self, $msg );
+    ( $msg, $kat, $an ) = command_parsing( $self, $msg );
     $msg =~ s{(https?://\S+)}{\[url\]$1\[/url\]}xmsig;
     my $dbh = $self->dbh;
     $dbh->do( 'UPDATE anz_zeichen SET anz=anz+?', undef, $laenge );
     my $sql = << 'EOSQL';
-INSERT INTO tex_text ( ben_fk, tex_text, tex_dat, tex_kat) 
-VALUES ( ?, ?, now(), ? )
+INSERT INTO tex_text ( ben_fk, tex_text, tex_dat, tex_kat, tex_von, tex_an) 
+VALUES ( ?, ?, now(), ?, ?, ? )
 EOSQL
-    $dbh->do( $sql, undef, $user, html_escape($msg), $kat );
+    $dbh->do( $sql, undef, $user, html_escape($msg), $kat, $an ? $user : '', $an );
     $self->log_timestamp;
     refresh($self)
 };
@@ -244,7 +269,7 @@ sub prepare_msg {
     my ( $m, $s ) = @_;
     $m->[7] = lc($s->{user}) eq lc($m->[1]) ? 1 : 0;
     $m->[3] = $1 if $m->[3] =~ m/\s(\d\d:\d\d)/xms;
-    if ( $m->[2] =~ m{/(away|busy|online)}xmsi ) {
+    if ( $m->[2] =~ m{\A/(away|busy|online)}xmsi ) {
         $m->[2] = "» $m->[1] ist " . $german_status{$1};
         return $m;
     }
@@ -277,10 +302,10 @@ sub refresh {
     my $sql = << 'EOSQL';
 SELECT tex_id, ben_fk, tex_text, tex_dat, tex_von, tex_an, tex_kat
 FROM tex_text
-WHERE tex_id > ?
+WHERE tex_id > ? AND (lower(tex_an) = lower(?) OR tex_an = '' OR tex_an IS NULL)
 ORDER BY tex_dat ASC;
 EOSQL
-    my $msgs = [ map { prepare_msg($_, $session) } @{ $dbh->selectall_arrayref( $sql, undef, $session->{tex_id} ) } ];
+    my $msgs = [ map { prepare_msg($_, $session) } @{ $dbh->selectall_arrayref( $sql, undef, $session->{tex_id}, $session->{user} ) } ];
     $session->{tex_id} = $msgs->[-1][0] if @$msgs;
 
     # user, refresh, status, timediff
