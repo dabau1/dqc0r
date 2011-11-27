@@ -9,9 +9,9 @@
         </td>
         <td>
             <select id="status" onChange="set_status(this.value)">
-                <option value="online">Online</option>
-                <option value="busy">Busy</option>
-                <option value="away">Away</option>
+% for my $s (qw(online busy away)) {
+                <option value="<%= $s %>"><%= "\u$s" %></option>
+% }
             </select>
         </td>
         <td rowspan="4">
@@ -20,9 +20,9 @@
     </tr>
     <tr>
         <td>
-            <div class="textarea" id="chatbox"><span style="color:#4C3333">
-            <b>Petri Heil Ganove ....der Plautzbär sagt Hallo!! (/? für Hilfe)</b>
-            </span></div>
+            <div class="textarea" id="chatbox">
+                <p class="StatusMsg">Petri Heil Ganove ....der Plautzbär sagt Hallo!! (/? für Hilfe)</p>
+            </div>
         </td>
         <td>
             <div class="textarea" id="buddylist"></div>
@@ -34,32 +34,17 @@
     </tr>
     <tr>
         <td>
-            <button value="b" onClick="bbcode(this.value)">b</button>
-            <button value="u" onClick="bbcode(this.value)">u</button>
-            <button value="i" onClick="bbcode(this.value)">i</button>
-            <button value="img" onClick="bbcode(this.value)">img</button>
-            <button value="url" onClick="bbcode(this.value)">url</button>
-            <button value="code" onClick="bbcode(this.value)">code</button>
+% for my $c (qw(b u i img url code)) {
+            <button value="<%= $c %>" onClick="bbcode(this.value)"><%= $c %></button>
+% }
             <input type="checkbox" id="sendonenter" /> Zeilenumbuch bei Eingabetaste
         </td>
         <td>
             <select id="refresh_interval" onChange="set_refresh(this.value)">
                 <option value="0">immer</option>
-                <option value="1">1 Min</option>
-                <option value="2">2 Min</option>
-                <option value="3">3 Min</option>
-                <option value="4">4 Min</option>
-                <option value="5">5 Min</option>
-                <option value="6">6 Min</option>
-                <option value="7">7 Min</option>
-                <option value="8">8 Min</option>
-                <option value="9">9 Min</option>
-                <option value="10">10 Min</option>
-                <option value="11">11 Min</option>
-                <option value="12">12 Min</option>
-                <option value="13">13 Min</option>
-                <option value="14">14 Min</option>
-                <option value="15">15 Min</option>
+% for my $t (1..15) {
+                <option value="<%= $t %>"><%= $t %> Min</option>
+% }
                 <option value="16">aus</option>
             </select>
             <button onclick="refresh()" id="refresh_button">laden</button>
