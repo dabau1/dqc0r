@@ -22,10 +22,7 @@ body {
 #buddylist, .loginfield, #sidepane, #status, #mm {
     width: 128px;
 }
-#buddylist {
-    overflow: hidden;
-}
-#chatbox {
+#buddylist, #chatbox {
     overflow: auto;
 }
 #sidepane {
