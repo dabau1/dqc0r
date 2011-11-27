@@ -10,7 +10,7 @@
         <td>
             <select id="status" onChange="set_status(this.value)">
 % for my $s (qw(online busy away)) {
-                <option value="<%= $s %>"><%= "\u$s" %></option>
+                <option value="<%= $s %>" class="<%= "\u$s" %>"><%= "\u$s" %></option>
 % }
             </select>
         </td>
