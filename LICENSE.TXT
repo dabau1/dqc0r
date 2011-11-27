@@ -1,0 +1,1 @@
+Developed under terms of GPL3. Have a look at "public/gpl-3.0.txt" for further details.

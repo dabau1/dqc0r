@@ -93,4 +93,7 @@ a:hover {
 #sidepane {
     border-top-width: 1px;
 }
+.footerlinks {
+    font-size: smaller;
+}
 
