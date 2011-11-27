@@ -2,9 +2,9 @@
 <html>
     <head>
         <title><%= title %></title>
-        <link rel="stylesheet" type="text/css" href="<%= url_for 'css/grau.css' %>" />
-        <script type="text/javascript" src="<%= url_for 'js/jquery-1.7.1.min.js' %>"></script>
-        <script type="text/javascript" src="<%= url_for 'js/script.js' %>"></script>
+        <link rel="stylesheet" type="text/css" href="<%= url_for '/css/grau.css' %>" />
+        <script type="text/javascript" src="<%= url_for '/js/jquery-1.7.1.min.js' %>"></script>
+        <script type="text/javascript" src="<%= url_for '/js/script.js' %>"></script>
         <script type="text/javascript">
             urlbase = '<%= url_for '/' %>';
             $(document).ready(function(){
