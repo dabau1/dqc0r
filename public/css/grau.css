@@ -95,5 +95,6 @@ a:hover {
 }
 .footerlinks {
     font-size: smaller;
+    border-top: 1px #999 dashed;
 }
 

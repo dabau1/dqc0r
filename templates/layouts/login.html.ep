@@ -4,6 +4,8 @@
         <title><%= title %></title>
         <link rel="stylesheet" type="text/css" href="<%= url_for 'css/grau.css' %>" />
     </head>
-    <body><%= content %></body>
+    <body><%= content %>
+        <%= include 'footerlinks' %>
+    </body>
 </html>
 

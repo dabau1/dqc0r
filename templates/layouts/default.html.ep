@@ -14,14 +14,7 @@
         </script>
     </head>
     <body><%= content %>
-    <p class="footerlinks">
-        <a href="https://github.com/bedivere/dqc0r" title="Quellcode auf GitHub" target="_blank">GitHub</a>,
-        <a href="https://github.com/bedivere/dqc0r/issues" title="GitHub Issue-Tracker" target="_blank">Issues</a>,
-        <a href="http://www.mojolicio.us/" title="Mojolicous Web-Framework" target="_blank">Mojolicious</a>,
-        <a href="http://jquery.com/" title="JQuery Javascript-Bibliothek" target="_blank">JQuery</a>,
-        <a href="<%=url_for 'gpl-3.0.txt' %>" title="Developed under terms of GPL 3" target="_blank">GPL</a>,
-        (für verlinkte Webseiten wird keine Haftung übernommen)
-    </p>
+        <%= include 'footerlinks' %>
     </body>
 </html>
 
