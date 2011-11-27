@@ -35,7 +35,7 @@ function update(data) {
 
     // Chat messages
     $.map(data["msgs"], function(val, i) {
-        var str = '<span class="timestamp">'+val[3]+'</span>';
+        var str = '';
         var classstr = new Array();
         if (val[6] == 0)
             str += '&nbsp;<span class="nick">'+val[1]+':</span>';
@@ -48,7 +48,7 @@ function update(data) {
             classstr.push('StatusMsg');
         }
         if (classstr) str = '<span class="'+classstr.join(' ')+'">'+str+'</span>';
-        str = '<p>'+str+'</p>';
+        str = '<p><span class="timestamp">'+val[3]+'</span>'+str+'</p>';
         $('#chatbox').append(str);
         $("#chatbox").each( function(){
             var scrollHeight = Math.max(this.scrollHeight, this.clientHeight);
