@@ -17,18 +17,19 @@ FROM ben_benutzer
 WHERE lower(ben_user)=lower(?) AND ben_pw=?
 EOSQL
     my @admindata = $dbh->selectrow_array( $sql, undef, $user, $pass );
+
     unless (@admindata) {
         $self->render( 'login_form', error => 'Anmeldung fehlgeschlagen' );
         return;
     }
     %$session = (
         %$session,
-        user     => $user,
-        pass     => $pass,
-        admin    => $admindata[0],
-        status   => $admindata[1],
-        news     => $admindata[2],
-        userid   => $admindata[3],
+        user   => $user,
+        pass   => $pass,
+        admin  => $admindata[0],
+        status => $admindata[1],
+        news   => $admindata[2],
+        userid => $admindata[3],
     );
     $sql = << 'EOSQL';
 SELECT tex_id 
@@ -72,13 +73,13 @@ q{UPDATE ben_benutzer SET ben_session='' WHERE lower(ben_user)=lower(? );
 
 sub login_form {
     my $self = shift;
-    $self->render('login_form', error => 'Bitte melden Sie sich an');
+    $self->render( 'login_form', error => 'Bitte melden Sie sich an' );
 }
 
 sub check_login {
     my $self = shift;
     return 1 if $self->session()->{user};
-    $self->redirect_to( 'login_form' );
+    $self->redirect_to('login_form');
     return;
 }
 

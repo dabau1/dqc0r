@@ -26,8 +26,8 @@ our $helpmsg = << 'EOHELP';
 EOHELP
 
 our %german_status = (
-    away => 'gerade nicht da',
-    busy => 'tierisch beschäftigt ... oder tut wenigstens so als ob',
+    away   => 'gerade nicht da',
+    busy   => 'tierisch beschäftigt ... oder tut wenigstens so als ob',
     online => 'jetzt verfügbar',
 );
 
@@ -37,13 +37,17 @@ our %german_status = (
 
     sub set_config {
         my $app = shift;
-        $config = $app->plugin( JSONConfig => { file => '../../etc/dqc0r.conf' } );
-        $app->secret($config->{cookie_secret});
+        $config =
+          $app->plugin( JSONConfig => { file => '../../etc/dqc0r.conf' } );
+        $app->secret( $config->{cookie_secret} );
     }
+
     sub dbh {
         return $dbh if $dbh;
         $dbh = DBI->connect(
-            $config->{dsn}, $config->{user}, $config->{password},
+            $config->{dsn},
+            $config->{user},
+            $config->{password},
             {
                 RaiseError => 1,
                 AutoCommit => 1,
