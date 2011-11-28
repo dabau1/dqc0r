@@ -33,8 +33,7 @@ sub log_timestamp {
 sub startup {
     my $self = shift;
     my $app = $self->app;
-    $app->secret('asjdfhfjdj22 f"  asdoae jb<F3>.of %)(fa 84u9iqw');
-    Data::set_config( $self->plugin( JSONConfig => { file => '../../etc/dqc0r.conf' } ) );
+    Data::set_config( $app );
 
     # Routes
     my $r = $self->routes;

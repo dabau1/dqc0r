@@ -35,8 +35,11 @@ our %german_status = (
     my $dbh;
     my $config = {};
 
-    sub set_config { $config = shift }
-
+    sub set_config {
+        my $app = shift;
+        $config = $app->plugin( JSONConfig => { file => '../../etc/dqc0r.conf' } );
+        $app->secret($config->{cookie_secret});
+    }
     sub dbh {
         return $dbh if $dbh;
         $dbh = DBI->connect(
