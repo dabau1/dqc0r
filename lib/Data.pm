@@ -10,7 +10,8 @@ our $helpmsg = << 'EOHELP';
     /help           : Dreimal darfst du raten
     /b, /u, /i      : Fette, shiefe oder unterstrichene Zeile
     /set_refresh ## : Refresh-Frequenz auf ## setzen
-    /news           : Notiz für die rechte Seitenspalte
+    /add_news       : Notiz für die rechte Seitenspalte
+    /del_news ##    : Notiz ## entfernen
     /online         : Setzt den Status auf online
     /away           : Setzt den Status auf away
     /busy           : Setzt den Status auf busy[/code]

@@ -62,7 +62,7 @@ ORDER BY b.ben_dat
 EOSQL
     my $users = [ map { _prepare_user($_, $session) } @ { $dbh->selectall_arrayref( $sql ) } ];
     $sql = << 'EOSQL';
-SELECT n.not_date, b.ben_user, n.not_notiz
+SELECT n.not_date, b.ben_user, n.not_notiz, n.not_id
 FROM not_notiz n
 INNER JOIN ben_benutzer b ON b.ben_id = n.ben_fk
 ORDER BY n.not_date DESC;

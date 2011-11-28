@@ -94,7 +94,7 @@ function update(data) {
     // Notes
     $('#sidepane').empty();
     $.map(data["notes"], function(val, i) {
-        $('#sidepane').append('<p class="note">'+val[0]+' <b>'+val[1]+'</b>: '+val[2]+'</p>');
+        $('#sidepane').append('<p class="note"><button onClick="del_note('+val[3]+')">X</button>'+val[0]+' <b>'+val[1]+'</b>: '+val[2]+'</p>');
     });
     enable_chat();
 }
@@ -127,6 +127,7 @@ function send_on_enter(event) {
 }
 
 function set_status(val) { ajax_send({"msg": '/'+val}) }
+function del_note(val) { ajax_send({"msg": '/del_news '+val}) }
 
 function set_refresh(val) {
     disable_chat();

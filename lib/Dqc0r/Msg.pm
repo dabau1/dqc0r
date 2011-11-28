@@ -26,8 +26,8 @@ our %commands = (
     },
     set_refresh => sub {
         my ( $self, $txt ) = @_;
-        return ( $txt, 0 ) unless $txt =~ m/(\d+)/xms;
         my $user = $self->session->{user};
+        return 'Refreshinterval setzen geht so: [code]/set_refresh ##[/code]', 0, $user unless $txt =~ m/(\d+)/xms;
         my $interval = $1;
         if ( $interval >= 16 ) {
             $txt ="» $user schaut nur noch nach neuen Nachrichten, wenn es ihm grad mal danach ist";
@@ -45,9 +45,10 @@ EOSQL
         Data::dbh()->do($sql, undef, $interval, $user);
         return $txt, 1;
     },
-    news => sub {
+    add_news => sub {
         my ( $self, $txt ) = @_;
         my $session = $self->session;
+        return 'Nachrichten müssen folgende Form haben: [code]/add_news Newstext[/code]', 2, $session->{user} unless $txt;
         return $txt, 0 unless $txt;
         my $sql = << 'EOSQL';
 INSERT INTO not_notiz
@@ -57,6 +58,18 @@ EOSQL
         Data::dbh()->do($sql, undef, $session->{userid}, $txt, Dqc0r::get_timestamp_for_db());
         $txt = "» $session->{user} hat eine Notiz hinterlassen";
         return $txt, 1;
+    },
+    del_news => sub {
+        my ( $self, $txt ) = @_;
+        my $user = $self->session->{user};
+        return 'Nachrichten werden wie folgt gelöscht: [code]/del_news ##[/code]', 2, $user unless $txt =~ m/\A\s*(\d+)/xms;
+        my $id = $1;
+        my $sql = << 'EOSQL';
+DELETE FROM not_notiz
+WHERE not_id=?
+EOSQL
+        Data::dbh()->do($sql, undef, $id);
+        return "» $user hat eine Notiz entfernt", 1;
     },
     help => sub {
         my ( $self, $txt ) = @_;
@@ -97,7 +110,7 @@ sub msg {
     chomp($msg);
     my $laenge = length $msg;
     if ( 2 > $laenge ) {
-        refresh($self);
+        $self->redirect_to('/refresh');
         return;
     }
     my $kat    = 0;
