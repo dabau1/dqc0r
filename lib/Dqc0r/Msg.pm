@@ -104,7 +104,6 @@ sub msg {
     my $an     = '';
     local %commands = ( %commands, %admincommands ) if $session->{admin};
     ( $msg, $kat, $an ) = $self->_command_parsing( $msg );
-    $msg =~ s{(https?://\S+)}{\[url\]$1\[/url\]}xmsig;
     my $dbh = Data::dbh();
     $dbh->do( 'UPDATE anz_zeichen SET anz=anz+?', undef, $laenge );
     my $sql = << 'EOSQL';
