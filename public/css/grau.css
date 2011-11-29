@@ -22,11 +22,11 @@ button, select, input[type="submit"] {
 button, select, input[type="checkbox"], input[type="submit"] {
     cursor: pointer;
 }
-button:hover, select:hover {
+button:hover, select:hover, input[type="submit"]:hover {
     background-image: url('');
     background-color: #aaa;
 }
-button:active {
+button:active, input[type="submit"]:active {
     background-image: url('');
     background-color: #888;
 }
