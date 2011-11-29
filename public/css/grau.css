@@ -5,7 +5,7 @@ body {
     background-image: url('../img/bg.png');
     background-repeat: repeat-y;
 }
-button, select {
+button, select, input[type="submit"] {
     text-shadow: #fff 0px 0px 2px;
     background-color: #fff;
     background-image: url('../img/button.png');
@@ -19,7 +19,7 @@ button, select {
     padding: 1px;
     margin: 1px;
 }
-button, select, input[type="checkbox"] {
+button, select, input[type="checkbox"], input[type="submit"] {
     cursor: pointer;
 }
 button:hover, select:hover {
