@@ -94,7 +94,7 @@ function update(data) {
     // Notes
     $('#sidepane').empty();
     $.map(data["notes"], function(val, i) {
-        $('#sidepane').append('<p class="note"><button class="delete" onClick="del_note('+val[3]+')">X</button>'+val[0]+' <b>'+val[1]+'</b>: '+val[2]+'</p>');
+        $('#sidepane').append('<p class="note"><button class="delete" onClick="del_note('+val[3]+')">x</button>'+val[0]+' <b>'+val[1]+'</b>: '+val[2]+'</p>');
     });
     enable_chat();
 }
