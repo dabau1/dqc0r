@@ -1,105 +1,22 @@
 package Dqc0r::Msg::UserCommands;
+use Dqc0r::Msg::UserCommands::Chat;
+use Dqc0r::Msg::UserCommands::Status;
+use Dqc0r::Msg::UserCommands::News;
 use 5.010;
 use warnings;
 use utf8;
 
-sub _set_state {
-    my ( $self, $cmd, $msg, $kat ) = @_;
-    my $user = $self->session->{user};
-    my $txt  = "» $user ist " . $Data::german_status{$cmd};
-    $cmd = "\u$cmd";
-    $txt .= ": $msg" if $msg;
-    my $sql = << 'EOSQL';
-UPDATE ben_benutzer
-SET ben_status = ?
-WHERE lower(ben_user)=lower(?)
-EOSQL
-    Data::dbh()->do( $sql, undef, $cmd, $user );
-    return $txt, $kat;
-}
-
-sub _set_refresh {
-    my ( $self, $txt ) = @_;
-    my $user = $self->session->{user};
-    return 'Refreshinterval setzen geht so: [code]/set_refresh ##[/code]',
-      0, $user
-      unless $txt =~ m/(\d+)/xms;
-    my $interval = $1;
-    if ( $interval >= 16 ) {
-        $txt =
-"» $user schaut nur noch nach neuen Nachrichten, wenn es ihm grad mal danach ist";
-    }
-    elsif ( $interval == 0 ) {
-        $txt =
-"» $user ist aufmerksam wie ein Wachhund und schaut ständig nach neuen Nachrichten";
-    }
-    else {
-        $txt =
-"» $user schaut erst in $interval Minuten wieder nach neuen Nachrichten";
-    }
-    my $sql = << 'EOSQL';
-UPDATE log_login SET refresh=?
-WHERE lower(ben_fk)=lower(?)
-EOSQL
-    Data::dbh()->do( $sql, undef, $interval, $user );
-    return $txt, 1;
-}
-
-sub _add_news {
-    my ( $self, $txt ) = @_;
-    my $session = $self->session;
-    return
-'Nachrichten müssen folgende Form haben: [code]/add_news Newstext[/code]',
-      2, $session->{user}
-      unless $txt;
-    return $txt, 0 unless $txt;
-    my $sql = << 'EOSQL';
-INSERT INTO not_notiz
-(ben_fk, not_notiz, not_date)
-VALUES (?, ?, ?)
-EOSQL
-    Data::dbh()
-      ->do( $sql, undef, $session->{userid}, $txt,
-        Dqc0r::get_timestamp_for_db() );
-    $txt = "» $session->{user} hat eine Notiz hinterlassen";
-    return $txt, 1;
-}
-
-sub _del_news {
-    my ( $self, $txt ) = @_;
-    my $user = $self->session->{user};
-    return
-      'Nachrichten werden wie folgt gelöscht: [code]/del_news ##[/code]',
-      2, $user
-      unless $txt =~ m/\A\s*(\d+)/xms;
-    my $id  = $1;
-    my $sql = << 'EOSQL';
-DELETE FROM not_notiz
-WHERE not_id=?
-EOSQL
-    Data::dbh()->do( $sql, undef, $id );
-    return "» $user hat eine Notiz entfernt", 1;
-}
-
-sub _msg {
-    my ( $self, $txt ) = @_;
-    return $txt, 0 unless $txt =~ m/\A(\w+)\s*(.+)\z/xmsi;
-    my $to = $1;
-    $txt = $2;
-    return $txt, 3, $to;
-}
-
 our %Commands = (
     me          => sub { '» ' . $_[0]->session->{user} . " $_[1]", 1 },
-    set_refresh => \&_set_refresh,
-    add_news    => \&_add_news,
-    del_news    => \&_del_news,
-    msg         => \&_msg,
+    set_refresh => \&Dqc0r::Msg::UserCommands::Status::set_refresh,
+    add_news    => \&Dqc0r::Msg::UserCommands::News::add_news,
+    del_news    => \&Dqc0r::Msg::UserCommands::News::del_news,
+    msg         => \&Dqc0r::Msg::UserCommands::Chat::msg,
     help => sub { $Data::helpmsg, 2, $_[0]->session->{user} },
     (    # Online, Busy, Away
         map {
             my ( $st, $k ) = ( $_->[0], $_->[1] );
-            $st => sub { _set_state( $_[0], $st, $_[1], $k ) }
+            $st => sub { Dqc0r::Msg::UserCommands::Status::set_state( $_[0], $st, $_[1], $k ) }
           } ( [ online => 10 ], [ busy => 11 ], [ away => 12 ], )
     ),
     (    # format the line - shortcut
