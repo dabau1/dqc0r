@@ -1,7 +1,7 @@
 package Dqc0r::Refresh;
 use Mojo::Base 'Mojolicious::Controller';
 use utf8;
-use Data;
+use Data::Refresh;
 
 sub _prepare_msg {
     my ( $m, $s ) = @_;
@@ -43,59 +43,23 @@ sub refresh {
     my $self    = shift;
     my $session = $self->session;
     my $user    = $session->{user};
-    my $login   = $self->param('login');
-    my $dbh     = Data::dbh();
-    my @params  = ( $session->{tex_id}, $user, $user );
 
-    my $sql = << 'EOSQL';
-SELECT tex_id, ben_fk, tex_text, tex_dat, tex_von, tex_an, tex_kat
-FROM tex_text
-WHERE tex_id > ? AND 
-    (lower(tex_an) = lower(?) 
-        OR lower(tex_von) = lower(?) 
-        OR tex_an = '' OR tex_an IS NULL)
-EOSQL
-    if ( $login ) {
-        $sql = "($sql)";
-        $sql .= << 'EOSQL';
-UNION
-(SELECT tex_id, ben_fk, tex_text, tex_dat, tex_von, tex_an, tex_kat
-FROM tex_text
-WHERE lower(tex_an)=lower(?) AND tex_dat > ?)
-EOSQL
-        push @params, ( $user, $session->{last_login} );
-    }
-    $sql .= "\nORDER BY tex_dat ASC";
-    my $msgs =
-      [ map { _prepare_msg( $_, $session ) }
-          @{ $dbh->selectall_arrayref( $sql, undef, @params ) } ];
+    my $msgs = [
+        map { _prepare_msg( $_, $session ) } @{
+            Data::Refresh::get_msgs(
+                $user,                 $session->{tex_id},
+                $self->param('login'), $session->{last_login}
+            )
+          }
+    ];
     $session->{tex_id} = $msgs->[-1][0] if @$msgs;
 
     # user, refresh, status, timediff
-    $sql = << 'EOSQL';
-SELECT 
-    b.ben_user, l.refresh, b.ben_status,
-    case when l.refresh > 0 then round((unix_timestamp(now()) - unix_timestamp(l.log_timestamp))/60) else 0 end as ltime,
-    b.ben_admin
-FROM log_login l
-INNER JOIN ben_benutzer b ON l.ben_fk=b.ben_user
-WHERE 
-    ( l.refresh = 0 AND ((unix_timestamp(now()) - unix_timestamp(l.log_timestamp)) < ( 10 * 60 )) ) 
-    OR 
-    ( l.refresh > 0 AND ((unix_timestamp(now()) - unix_timestamp(l.log_timestamp)) < (l.refresh*60+30)) )
-ORDER BY b.ben_dat
-EOSQL
     my $users =
-      [ map { _prepare_user( $_, $session ) }
-          @{ $dbh->selectall_arrayref($sql) } ];
-    $sql = << 'EOSQL';
-SELECT n.not_date, b.ben_user, n.not_notiz, n.not_id
-FROM not_notiz n
-INNER JOIN ben_benutzer b ON b.ben_id = n.ben_fk
-ORDER BY n.not_date DESC;
-EOSQL
-    my $notes =
-      [ map { _prepare_note($_) } @{ $dbh->selectall_arrayref($sql) } ];
+      [ map { _prepare_user( $_, $session ) } @{ Data::Refresh::get_users() } ];
+
+    my $notes = [ map { _prepare_note($_) } @{ Data::Refresh::get_notes() } ];
+
     Dqc0r::log_timestamp($self);
     $self->render(
         json => { msgs => $msgs, buddies => $users, notes => $notes } );
