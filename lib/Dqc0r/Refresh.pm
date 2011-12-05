@@ -26,9 +26,9 @@ s{\[img\](.+?)\[/img\]}{<a href="$1" title="Externes Bild" target="_blank"><img 
 
 sub _prepare_user {
     my ( $u, $s ) = @_;
+    $u->[5] = lc( $s->{user} ) eq lc( $u->[0] ) ? 1 : 0;
     $u->[0] = '@' . $u->[0] if $u->[4];
     $u->[2] = 'Online' unless $u->[2];
-    $u->[5] = lc( $s->{user} ) eq lc( $u->[0] ) ? 1 : 0;
     return $u;
 }
 
