@@ -35,6 +35,7 @@ sub msg {
     %commands = ( %commands, %Dqc0r::Msg::AdminCommands::Commands ) if $session->{admin};
     ( $msg, $kat, $an ) = $self->_command_parsing( \%commands, $msg );
     my $dbh = Data::dbh();
+    $laenge = length $msg;
     $dbh->do( 'UPDATE anz_zeichen SET anz=anz+?', undef, $laenge );
     my $sql = << 'EOSQL';
 INSERT INTO tex_text ( ben_fk, tex_text, tex_dat, tex_kat, tex_von, tex_an) 
