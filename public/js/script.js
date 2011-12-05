@@ -109,9 +109,14 @@ function update(data) {
     enable_chat();
 }
 
-function refresh() {
+function refresh(data) {
     disable_chat();
-    $.getJSON(urlbase+'/refresh', update);
+    if ( data ) {
+        $.getJSON(urlbase+'/refresh', data, update);
+    }
+    else {
+        $.getJSON(urlbase+'/refresh', update);
+    }
 }
 
 function ajax_send(msg) {

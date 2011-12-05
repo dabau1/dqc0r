@@ -32,12 +32,20 @@ EOSQL
         userid => $admindata[3],
     );
     $sql = << 'EOSQL';
-SELECT tex_id 
+SELECT tex_id, tex_dat 
 FROM tex_text 
 ORDER BY tex_id DESC 
 LIMIT 1 OFFSET 10
 EOSQL
     $session->{tex_id} = $dbh->selectrow_arrayref($sql)->[0] // 0;
+
+    $sql = << 'EOSQL';
+SELECT log_timestamp 
+FROM log_login 
+WHERE lower(ben_fk)=lower(?)
+EOSQL
+    $session->{last_login} = ( $dbh->selectrow_array($sql, undef, $user) )[0] // $session->{tex_id};
+
     $sql = << 'EOSQL';
 UPDATE ben_benutzer 
 SET 
@@ -65,8 +73,8 @@ q{UPDATE ben_benutzer SET ben_session='' WHERE lower(ben_user)=lower(? );
         }
         , undef, $user
     );
-    $dbh->do( 'DELETE FROM log_login WHERE lower(ben_fk)=lower(?)',
-        undef, $user );
+    #$dbh->do( 'DELETE FROM log_login WHERE lower(ben_fk)=lower(?)',
+    #    undef, $user );
     $self->render( 'login_form',
         error => 'Abmelden bestätigt, bitte melden Sie sich erneut an' );
 }

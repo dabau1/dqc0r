@@ -9,7 +9,7 @@
         <script type="text/javascript">
             urlbase = '<%= url_for '/' %>';
             $(document).ready(function(){
-                refresh();
+                refresh( {'login': 1} );
                 $('#msg').keyup(send_on_enter);
             });
         </script>

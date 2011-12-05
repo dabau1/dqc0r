@@ -43,23 +43,32 @@ sub refresh {
     my $self    = shift;
     my $session = $self->session;
     my $user    = $session->{user};
+    my $login   = $self->param('login');
     my $dbh     = Data::dbh();
-    my $sql     = << 'EOSQL';
+    my @params  = ( $session->{tex_id}, $user, $user );
+
+    my $sql = << 'EOSQL';
 SELECT tex_id, ben_fk, tex_text, tex_dat, tex_von, tex_an, tex_kat
 FROM tex_text
 WHERE tex_id > ? AND 
     (lower(tex_an) = lower(?) 
         OR lower(tex_von) = lower(?) 
         OR tex_an = '' OR tex_an IS NULL)
-ORDER BY tex_dat ASC;
 EOSQL
-    my $msgs = [
-        map { _prepare_msg( $_, $session ) } @{
-            $dbh->selectall_arrayref( $sql, undef, $session->{tex_id},
-                $user, $user
-            )
-          }
-    ];
+    if ( $login ) {
+        $sql = "($sql)";
+        $sql .= << 'EOSQL';
+UNION
+(SELECT tex_id, ben_fk, tex_text, tex_dat, tex_von, tex_an, tex_kat
+FROM tex_text
+WHERE lower(tex_an)=lower(?) AND tex_dat > ?)
+EOSQL
+        push @params, ( $user, $session->{last_login} );
+    }
+    $sql .= "\nORDER BY tex_dat ASC";
+    my $msgs =
+      [ map { _prepare_msg( $_, $session ) }
+          @{ $dbh->selectall_arrayref( $sql, undef, @params ) } ];
     $session->{tex_id} = $msgs->[-1][0] if @$msgs;
 
     # user, refresh, status, timediff
