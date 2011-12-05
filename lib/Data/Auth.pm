@@ -50,7 +50,7 @@ SET
 WHERE lower(ben_user)=lower(?)
 EOSQL
     Data::dbh()->do( $sql, undef, $session, $user );
-    Data::Msg::insert_msg( $user, "» $user ist jetzt angemeldet", 2, '' );
+    Data::Msg::insert_msg( $user, "» $user ist jetzt angemeldet", 1, '' );
 }
 
 sub logout {
@@ -60,7 +60,7 @@ q{UPDATE ben_benutzer SET ben_session='' WHERE lower(ben_user)=lower(? );
         }
         , undef, $user
     );
-    Data::Msg::insert_msg( $user, "» $user hat sich abgemeldet", 2, '' );
+    Data::Msg::insert_msg( $user, "» $user hat sich abgemeldet", 1, '' );
     #$dbh->do( 'DELETE FROM log_login WHERE lower(ben_fk)=lower(?)',
     #    undef, $user );
 }
