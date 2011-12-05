@@ -4,12 +4,12 @@ use 5.010;
 use warnings;
 use utf8;
 use Data::Msg::UserCommands::Status;
-use Data::Language;
+use Language;
 
 sub set_state {
     my ( $self, $cmd, $msg, $kat ) = @_;
     my $user = $self->session->{user};
-    my $txt  = "» $user ist " . $Data::Language::german_status{$cmd};
+    my $txt  = "» $user ist " . $Language::german_status{$cmd};
     $cmd = "\u$cmd";
     $txt .= ": $msg" if $msg;
     Data::Msg::UserCommands::Status::update_state( $user, $cmd );

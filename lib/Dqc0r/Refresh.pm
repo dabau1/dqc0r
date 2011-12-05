@@ -2,13 +2,14 @@ package Dqc0r::Refresh;
 use Mojo::Base 'Mojolicious::Controller';
 use utf8;
 use Data::Refresh;
+use Language;
 
 sub _prepare_msg {
     my ( $m, $s ) = @_;
     $m->[7] = lc( $s->{user} ) eq lc( $m->[1] ) ? 1 : 0;
     $m->[3] = $1 if $m->[3] =~ m/\s(\d\d:\d\d)/xms;
     if ( $m->[2] =~ m{\A/(away|busy|online)}xmsi ) {
-        $m->[2] = "» $m->[1] ist " . $Data::german_status{$1};
+        $m->[2] = "» $m->[1] ist " . $Language::german_status{$1};
         return $m;
     }
     $m->[2] =~ s{[\n\r]+}{<br />&nbsp;&nbsp;&nbsp;&nbsp;}xmsg;
