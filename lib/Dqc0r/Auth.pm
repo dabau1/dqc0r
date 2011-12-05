@@ -2,23 +2,17 @@ package Dqc0r::Auth;
 use Mojo::Base 'Mojolicious::Controller';
 use Mojo::Util 'md5_sum';
 use utf8;
-use Data;
+use Data::Auth;
 
 sub login {
     my $self    = shift;
     my $session = $self->session;
     my $user    = $self->param('user');
     my $pass    = md5_sum( $self->param('pass') );
-    my $dbh     = Data::dbh();
     $self->stash( error => '' );
-    my $sql = << 'EOSQL';
-SELECT ben_admin, ben_status, ben_news, ben_id i
-FROM ben_benutzer 
-WHERE lower(ben_user)=lower(?) AND ben_pw=?
-EOSQL
-    my @admindata = $dbh->selectrow_array( $sql, undef, $user, $pass );
+    my @data = Data::Auth::get_userdata( $user, $pass );
 
-    unless (@admindata) {
+    unless (@data) {
         $self->render( 'login_form', error => 'Anmeldung fehlgeschlagen' );
         return;
     }
@@ -26,36 +20,15 @@ EOSQL
         %$session,
         user   => $user,
         pass   => $pass,
-        admin  => $admindata[0],
-        status => $admindata[1],
-        news   => $admindata[2],
-        userid => $admindata[3],
+        admin  => $data[0],
+        status => $data[1],
+        news   => $data[2],
+        userid => $data[3],
     );
-    $sql = << 'EOSQL';
-SELECT tex_id, tex_dat 
-FROM tex_text 
-ORDER BY tex_id DESC 
-LIMIT 1 OFFSET 10
-EOSQL
-    $session->{tex_id} = $dbh->selectrow_arrayref($sql)->[0] // 0;
 
-    $sql = << 'EOSQL';
-SELECT log_timestamp 
-FROM log_login 
-WHERE lower(ben_fk)=lower(?)
-EOSQL
-    $session->{last_login} = ( $dbh->selectrow_array($sql, undef, $user) )[0] // $session->{tex_id};
+    ( $session->{tex_id}, $session->{last_login} ) = ( Data::Auth::get_lastsessiondata( $user ) );
 
-    $sql = << 'EOSQL';
-UPDATE ben_benutzer 
-SET 
-    ben_lastdate = ben_dat,
-    ben_session  = ?,
-    ben_dat      = now(),
-    ben_kick     = 0
-WHERE lower(ben_user)=lower(?)
-EOSQL
-    $dbh->do( $sql, undef, "$session", $user );
+    Data::Auth::update_usersession("$session", $user);
     Dqc0r::log_timestamp($self);
     $self->render('chat');
 }
@@ -67,14 +40,7 @@ sub logout {
     delete $session->{user};
     delete $session->{pass};
     delete $session->{userid};
-    my $dbh = Data::dbh();
-    $dbh->do(
-q{UPDATE ben_benutzer SET ben_session='' WHERE lower(ben_user)=lower(? );
-        }
-        , undef, $user
-    );
-    #$dbh->do( 'DELETE FROM log_login WHERE lower(ben_fk)=lower(?)',
-    #    undef, $user );
+    Data::Auth::logout($user);
     $self->render( 'login_form',
         error => 'Abmelden bestätigt, bitte melden Sie sich erneut an' );
 }

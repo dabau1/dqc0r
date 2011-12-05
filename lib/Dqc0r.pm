@@ -14,20 +14,7 @@ sub get_timestamp_for_db {
 sub log_timestamp {
     my $self      = shift;
     my $timestamp = shift // get_timestamp_for_db();
-    my $session   = $self->session;
-    my $dbh       = Data::dbh();
-    my $sql       = 'INSERT INTO log_login SET log_timestamp = ?, ben_fk = ?';
-    if (
-        $dbh->selectrow_array(
-            'SELECT log_id FROM log_login WHERE lower(ben_fk)=lower(?)',
-            undef, $session->{user}
-        )
-      )
-    {
-        $sql =
-          'UPDATE log_login SET log_timestamp=? WHERE lower(ben_fk)=lower(?)';
-    }
-    $dbh->do( $sql, undef, $timestamp, $session->{user} );
+    Data::log_timestamp( $timestamp, $self->session->{user} );
 }
 
 sub startup {

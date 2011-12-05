@@ -7,7 +7,7 @@ use utf8;
 sub set_state {
     my ( $self, $cmd, $msg, $kat ) = @_;
     my $user = $self->session->{user};
-    my $txt  = "» $user ist " . $Data::german_status{$cmd};
+    my $txt  = "» $user ist " . $Data::Language::german_status{$cmd};
     $cmd = "\u$cmd";
     $txt .= ": $msg" if $msg;
     my $sql = << 'EOSQL';

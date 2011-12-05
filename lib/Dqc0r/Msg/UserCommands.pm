@@ -2,6 +2,7 @@ package Dqc0r::Msg::UserCommands;
 use Dqc0r::Msg::UserCommands::Chat;
 use Dqc0r::Msg::UserCommands::Status;
 use Dqc0r::Msg::UserCommands::News;
+use Data::Language;
 use 5.010;
 use warnings;
 use utf8;
@@ -12,7 +13,7 @@ our %Commands = (
     add_news    => \&Dqc0r::Msg::UserCommands::News::add_news,
     del_news    => \&Dqc0r::Msg::UserCommands::News::del_news,
     msg         => \&Dqc0r::Msg::UserCommands::Chat::msg,
-    help => sub { $Data::helpmsg, 2, $_[0]->session->{user} },
+    help => sub { $Data::Language::helpmsg, 2, $_[0]->session->{user} },
     (    # Online, Busy, Away
         map {
             my ( $st, $k ) = ( $_->[0], $_->[1] );

@@ -5,33 +5,23 @@ use warnings;
 use utf8;
 use DBI;
 
-our $helpmsg = << 'EOHELP';
-[b]Nachrichten-Commandos:[/b][code]
-    /help           : Dreimal darfst du raten
-    /b, /u, /i      : Fette, shiefe oder unterstrichene Zeile
-    /code           : Breitengleiche Nachricht
-    /set_refresh ## : Refresh-Frequenz auf ## setzen
-    /add_news       : Notiz für die rechte Seitenspalte
-    /del_news ##    : Notiz ## entfernen
-    /online         : Setzt den Status auf online
-    /away           : Setzt den Status auf away
-    /busy           : Setzt den Status auf busy[/code]
-    /msg to text    : Sendet eine private Nachricht an "to"
+sub log_timestamp {
+    my ( $timestamp, $user ) = @_;
+    my $dbh = dbh();
+    my $sql = 'INSERT INTO log_login SET log_timestamp = ?, ben_fk = ?';
+    if (
+        $dbh->selectrow_array(
+            'SELECT log_id FROM log_login WHERE lower(ben_fk)=lower(?)',
+            undef, $user
+        )
+      )
+    {
+        $sql =
+          'UPDATE log_login SET log_timestamp=? WHERE lower(ben_fk)=lower(?)';
+    }
+    $dbh->do( $sql, undef, $timestamp, $user );
 
-[b]BBCodes:[/b][code]
-    url  : Link erzeugen zum wo drauf klicken
-    img  : Da wird ein Bild angezeigt
-    b    : Fettschreiben
-    u    : Unterschreiben
-    i    : Schiefschreiben
-    code : Breitengleiche vordefinierte Schrift[/code]
-EOHELP
-
-our %german_status = (
-    away   => 'gerade nicht da',
-    busy   => 'tierisch beschäftigt ... oder tut wenigstens so als ob',
-    online => 'jetzt verfügbar',
-);
+}
 
 {
     my $dbh;
