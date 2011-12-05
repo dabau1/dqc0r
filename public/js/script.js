@@ -54,8 +54,9 @@ function update(data) {
             if (val[6] == 10) classstr.push('Online');
             if (val[6] == 11) classstr.push('Busy');
             if (val[6] == 12) classstr.push('Away');
-            classstr.push('StatusMsg');
         }
+        if ((val[6] >= 10 && val[6] <= 12) || (val[6] == 1))
+            classstr.push('StatusMsg');
         if (classstr) str = '<span class="'+classstr.join(' ')+'">'+str+'</span>';
         str = '<p><span class="timestamp">'+val[3]+'</span>'+str+'</p>';
         $('#chatbox').append(str);

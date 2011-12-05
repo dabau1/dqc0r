@@ -84,6 +84,9 @@ a:hover {
 .Busy {
     color: #f00;
 }
+.StatusMsg {
+    color: #999;
+}
 .Refresh, .timestamp, .nick {
     color: #999;
 }
