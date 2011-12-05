@@ -39,6 +39,15 @@ function update(data) {
         var classstr = new Array();
         if (val[6] == 0)
             str += '&nbsp;<span class="nick">'+val[1]+':</span>';
+        if (val[6] == 3) {
+            if ( val[7] == 1 ) {
+                str += '&nbsp;<span class="nick">'+val[1]+' (an '+val[5]+'):</span>';
+            }
+            else {
+                str += '&nbsp;<span class="nick">'+val[1]+' (privat):</span>';
+                classstr.push('PrivateMsg');
+            }
+        }
         str += ' '+val[2];
         if (val[7] == 1) classstr.push('own_msg');
         if ((val[6] >= 10) && (val[6] <= 12)){

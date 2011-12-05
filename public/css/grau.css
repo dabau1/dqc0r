@@ -72,6 +72,9 @@ a:hover {
 .StatusMsg, .Away, .Busy {
     font-style: italic;
 }
+.PrivateMsg {
+    color: #c00;
+}
 .Online { 
     color: #0c3;
 }

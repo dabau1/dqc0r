@@ -9,6 +9,7 @@ our $helpmsg = << 'EOHELP';
 [b]Nachrichten-Commandos:[/b][code]
     /help           : Dreimal darfst du raten
     /b, /u, /i      : Fette, shiefe oder unterstrichene Zeile
+    /code           : Breitengleiche Nachricht
     /set_refresh ## : Refresh-Frequenz auf ## setzen
     /add_news       : Notiz für die rechte Seitenspalte
     /del_news ##    : Notiz ## entfernen

@@ -42,17 +42,22 @@ sub _prepare_note {
 sub refresh {
     my $self    = shift;
     my $session = $self->session;
+    my $user    = $session->{user};
     my $dbh     = Data::dbh();
     my $sql     = << 'EOSQL';
 SELECT tex_id, ben_fk, tex_text, tex_dat, tex_von, tex_an, tex_kat
 FROM tex_text
-WHERE tex_id > ? AND (lower(tex_an) = lower(?) OR tex_an = '' OR tex_an IS NULL)
+WHERE tex_id > ? AND 
+    (lower(tex_an) = lower(?) 
+        OR lower(tex_von) = lower(?) 
+        OR tex_an = '' OR tex_an IS NULL)
 ORDER BY tex_dat ASC;
 EOSQL
     my $msgs = [
         map { _prepare_msg( $_, $session ) } @{
             $dbh->selectall_arrayref( $sql, undef, $session->{tex_id},
-                $session->{user} )
+                $user, $user
+            )
           }
     ];
     $session->{tex_id} = $msgs->[-1][0] if @$msgs;
