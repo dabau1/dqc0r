@@ -16,6 +16,7 @@ our $helpmsg = << 'EOHELP';
     /online         : Setzt den Status auf online
     /away           : Setzt den Status auf away
     /busy           : Setzt den Status auf busy[/code]
+    /msg to text    : Sendet eine private Nachricht an "to"
 
 [b]BBCodes:[/b][code]
     url  : Link erzeugen zum wo drauf klicken
