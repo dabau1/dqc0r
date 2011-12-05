@@ -4,6 +4,7 @@ use 5.010;
 use warnings;
 use utf8;
 use Data;
+use Data::Msg;
 
 sub get_userdata {
     my ( $user, $pass ) = @_;
@@ -38,7 +39,7 @@ EOSQL
 }
 
 sub update_usersession {
-    my ( $session, $user ) = shift;
+    my ( $session, $user ) = @_;
     $sql = << 'EOSQL';
 UPDATE ben_benutzer 
 SET 
@@ -48,7 +49,8 @@ SET
     ben_kick     = 0
 WHERE lower(ben_user)=lower(?)
 EOSQL
-    Data::dbh()->do( $sql, undef, "$session", $user );
+    Data::dbh()->do( $sql, undef, $session, $user );
+    Data::Msg::insert_msg( $user, "» $user ist jetzt angemeldet", 2, '' );
 }
 
 sub logout {
@@ -58,6 +60,7 @@ q{UPDATE ben_benutzer SET ben_session='' WHERE lower(ben_user)=lower(? );
         }
         , undef, $user
     );
+    Data::Msg::insert_msg( $user, "» $user hat sich abgemeldet", 2, '' );
     #$dbh->do( 'DELETE FROM log_login WHERE lower(ben_fk)=lower(?)',
     #    undef, $user );
 }
