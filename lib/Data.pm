@@ -40,7 +40,7 @@ our %german_status = (
     sub set_config {
         my $app = shift;
         $config =
-          $app->plugin( JSONConfig => { file => '../../etc/dqc0r.conf' } );
+          $app->plugin( JSONConfig => { file => $ENV{DQC0R_CONFIG} // '../../etc/dqc0r.conf' } );
         $app->secret( $config->{cookie_secret} );
     }
 
