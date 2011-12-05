@@ -3,6 +3,8 @@ package Dqc0r::Msg::UserCommands::Status;
 use 5.010;
 use warnings;
 use utf8;
+use Data::Msg::UserCommands::Status;
+use Data::Language;
 
 sub set_state {
     my ( $self, $cmd, $msg, $kat ) = @_;
@@ -10,12 +12,7 @@ sub set_state {
     my $txt  = "» $user ist " . $Data::Language::german_status{$cmd};
     $cmd = "\u$cmd";
     $txt .= ": $msg" if $msg;
-    my $sql = << 'EOSQL';
-UPDATE ben_benutzer
-SET ben_status = ?
-WHERE lower(ben_user)=lower(?)
-EOSQL
-    Data::dbh()->do( $sql, undef, $cmd, $user );
+    Data::Msg::UserCommands::Status::update_state( $user, $cmd );
     return $txt, $kat;
 }
 
@@ -38,11 +35,7 @@ sub set_refresh {
         $txt =
 "» $user schaut erst in $interval Minuten wieder nach neuen Nachrichten";
     }
-    my $sql = << 'EOSQL';
-UPDATE log_login SET refresh=?
-WHERE lower(ben_fk)=lower(?)
-EOSQL
-    Data::dbh()->do( $sql, undef, $interval, $user );
+    Data::Msg::UserCommands::Status::update_refresh( $user, $interval );
     return $txt, 1;
 }
 

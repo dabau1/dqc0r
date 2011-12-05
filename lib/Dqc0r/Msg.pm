@@ -1,8 +1,7 @@
 package Dqc0r::Msg;
 use Mojo::Base 'Mojolicious::Controller';
-use Mojo::Util 'html_escape';
 use utf8;
-use Data;
+use Data::Msg;
 use Dqc0r::Msg::UserCommands;
 use Dqc0r::Msg::AdminCommands;
 
@@ -34,15 +33,8 @@ sub msg {
     my %commands = (%Dqc0r::Msg::UserCommands::Commands);
     %commands = ( %commands, %Dqc0r::Msg::AdminCommands::Commands ) if $session->{admin};
     ( $msg, $kat, $an ) = $self->_command_parsing( \%commands, $msg );
-    my $dbh = Data::dbh();
-    $laenge = length $msg;
-    $dbh->do( 'UPDATE anz_zeichen SET anz=anz+?', undef, $laenge );
-    my $sql = << 'EOSQL';
-INSERT INTO tex_text ( ben_fk, tex_text, tex_dat, tex_kat, tex_von, tex_an) 
-VALUES ( ?, ?, now(), ?, ?, ? )
-EOSQL
-    $dbh->do( $sql, undef, $user, html_escape($msg), $kat, $an ? $user : '',
-        $an );
+
+    Data::Msg::insert_msg( $user, $msg, $kat, $an );
     Dqc0r::log_timestamp($self);
     $self->redirect_to('/refresh');
 }

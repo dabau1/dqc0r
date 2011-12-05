@@ -3,6 +3,7 @@ package Dqc0r::Msg::UserCommands::News;
 use 5.010;
 use warnings;
 use utf8;
+use Data::Msg::UserCommands::News;
 
 sub add_news {
     my ( $self, $txt ) = @_;
@@ -12,14 +13,7 @@ sub add_news {
       2, $session->{user}
       unless $txt;
     return $txt, 0 unless $txt;
-    my $sql = << 'EOSQL';
-INSERT INTO not_notiz
-(ben_fk, not_notiz, not_date)
-VALUES (?, ?, ?)
-EOSQL
-    Data::dbh()
-      ->do( $sql, undef, $session->{userid}, $txt,
-        Dqc0r::get_timestamp_for_db() );
+    Data::Msg::UserCommands::News::insert_news( $session->{userid}, $txt, Dqc0r::get_timestamp_for_db() );
     $txt = "» $session->{user} hat eine Notiz hinterlassen";
     return $txt, 1;
 }
@@ -32,11 +26,7 @@ sub del_news {
       2, $user
       unless $txt =~ m/\A\s*(\d+)/xms;
     my $id  = $1;
-    my $sql = << 'EOSQL';
-DELETE FROM not_notiz
-WHERE not_id=?
-EOSQL
-    Data::dbh()->do( $sql, undef, $id );
+    Data::Msg::UserCommands::News::delete_news( $id );
     return "» $user hat eine Notiz entfernt", 1;
 }
 
