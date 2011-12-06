@@ -1,11 +1,11 @@
-package Data::Language;
+package Language;
 
 use 5.010;
 use warnings;
 use utf8;
 
 our $helpmsg = << 'EOHELP';
-[b]Nachrichten-Commandos:[/b][code]
+[pre]Nachrichten-Commandos:
     /help           : Dreimal darfst du raten
     /b, /u, /i      : Fette, shiefe oder unterstrichene Zeile
     /code           : Breitengleiche Nachricht
@@ -14,16 +14,17 @@ our $helpmsg = << 'EOHELP';
     /del_news ##    : Notiz ## entfernen
     /online         : Setzt den Status auf online
     /away           : Setzt den Status auf away
-    /busy           : Setzt den Status auf busy[/code]
+    /busy           : Setzt den Status auf busy
     /msg to text    : Sendet eine private Nachricht an "to"
-
-[b]BBCodes:[/b][code]
+    /set_pw oldpw newpw newpw: Neues Passwort setzen.
+BBCodes:
     url  : Link erzeugen zum wo drauf klicken
     img  : Da wird ein Bild angezeigt
     b    : Fettschreiben
     u    : Unterschreiben
     i    : Schiefschreiben
-    code : Breitengleiche vordefinierte Schrift[/code]
+    code : Breitengleiche vordefinierte Schrift
+    pre  : Mehrzeilige breitengleiche Schrift[/pre]
 EOHELP
 
 our %german_status = (
