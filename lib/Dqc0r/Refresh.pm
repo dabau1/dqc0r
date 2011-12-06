@@ -20,7 +20,7 @@ s{\[url\](.+?)\[/url\]}{<a href="$1" title="Externe Webseite" target="_blank">$1
     $m->[2] =~
 s{\[img\](.+?)\[/img\]}{<a href="$1" title="Externes Bild" target="_blank"><img src="$1" title="Externes Bild" /></a>}xmsig;
     $m->[8] = $m->[6] == 0 ? ( $m->[2] =~ s{\b($user)\b}{\[b\]$1\[/b\]}xgmsi ? 1 : 0 ) : 0;
-    $m->[2] =~ s{\[([bui])\](.+?)\[/[bui]\]}{<$1>$2</$1>}xmsig;
+    $m->[2] =~ s{\[([bui])\](.+?)\[/\1\]}{<$1>$2</$1>}xmsig;
     $m->[2] =~ s{\*(\w+)\*}{<b>$1</b>}xmsig;
     $m->[2] =~
       s{\[code(?: lang="?\w+"?)?\](.+?)\[/code\]}{<code>$1</code>}xmsig;
