@@ -115,7 +115,7 @@ button.delete {
     display: inline;
     border-width: 0px;
     padding: 0;
-    margin: 0 2px;
+    margin: 0;
     background-color: transparent;
     -moz-border-radius: 0px;
     text-shadow: none;

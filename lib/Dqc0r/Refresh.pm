@@ -38,7 +38,8 @@ sub _prepare_user {
 }
 
 sub _prepare_note {
-    my $n = shift;
+    my ( $n, $s ) = @_;
+    $n->[4] = ( $s->{admin} || ( lc($n->[1]) eq lc($s->{user}) ) ) ? 1 : 0;
     $n->[0] = sprintf '%d.%d.%04d',
       ( split '-', ( split ' ', $n->[0] )[0] )[ 2, 1, 0 ];
     return $n;
@@ -63,7 +64,7 @@ sub refresh {
     my $users =
       [ map { _prepare_user( $_, $session ) } @{ Data::Refresh::get_users() } ];
 
-    my $notes = [ map { _prepare_note($_) } @{ Data::Refresh::get_notes() } ];
+    my $notes = [ map { _prepare_note( $_, $session ) } @{ Data::Refresh::get_notes() } ];
 
     Dqc0r::log_timestamp($self);
     $self->render(
