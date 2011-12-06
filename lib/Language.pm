@@ -7,7 +7,7 @@ use utf8;
 our $helpmsg = << 'EOHELP';
 [pre]Nachrichten-Commandos:
     /help           : Dreimal darfst du raten
-    /b, /u, /i      : Fette, shiefe oder unterstrichene Zeile
+    /b, /u, /i      : Zeilenformatierung mit BBCodes
     /code           : Breitengleiche Nachricht
     /set_refresh ## : Refresh-Frequenz auf ## setzen
     /add_news       : Notiz für die rechte Seitenspalte
@@ -15,7 +15,7 @@ our $helpmsg = << 'EOHELP';
     /online         : Setzt den Status auf online
     /away           : Setzt den Status auf away
     /busy           : Setzt den Status auf busy
-    /msg to text    : Sendet eine private Nachricht an "to"
+    /msg to text    : Sendet eine private Nachricht
     /set_pw oldpw newpw newpw: Neues Passwort setzen.
 BBCodes:
     url  : Link erzeugen zum wo drauf klicken
