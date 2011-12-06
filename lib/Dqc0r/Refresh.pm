@@ -24,8 +24,6 @@ s{\[img\](.+?)\[/img\]}{<a href="$1" title="Externes Bild" target="_blank"><img 
     $m->[2] =~ s{\*(\w+)\*}{<b>$1</b>}xmsig;
     $m->[2] =~
       s{\[code(?: lang="?\w+"?)?\](.+?)\[/code\]}{<code>$1</code>}xmsig;
-    $m->[2] =~
-      s{\[pre\](.+?)\[/pre\]}{<pre>$1</pre>}xmsig;
     return $m;
 }
 

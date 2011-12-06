@@ -5,26 +5,25 @@ use warnings;
 use utf8;
 
 our $helpmsg = << 'EOHELP';
-[pre]Nachrichten-Commandos:
-    /help           : Dreimal darfst du raten
-    /b, /u, /i      : Zeilenformatierung mit BBCodes
-    /code           : Breitengleiche Nachricht
-    /set_refresh ## : Refresh-Frequenz auf ## setzen
-    /add_news       : Notiz für die rechte Seitenspalte
-    /del_news ##    : Notiz ## entfernen
-    /online         : Setzt den Status auf online
-    /away           : Setzt den Status auf away
-    /busy           : Setzt den Status auf busy
-    /msg to text    : Sendet eine private Nachricht
-    /set_pw oldpw newpw newpw: Neues Passwort setzen.
-BBCodes:
-    url  : Link erzeugen zum wo drauf klicken
-    img  : Da wird ein Bild angezeigt
-    b    : Fettschreiben
-    u    : Unterschreiben
-    i    : Schiefschreiben
-    code : Breitengleiche vordefinierte Schrift
-    pre  : Mehrzeilige breitengleiche Schrift[/pre]
+[u]Nachrichten-Commandos[/u]:
+[b]/help[/b]: Dreimal darfst du raten
+[b]/b[/b], [b]/u[/b], [b]/i[/b]: Zeilenformatierung mit BBCodes
+[b]/code[/b]: Breitengleiche Nachricht
+[b]/set_refresh ##[/b]: Refresh-Frequenz auf ## setzen
+[b]/add_news[/b]: Notiz für die rechte Seitenspalte
+[b]/del_news ##[/b]: Notiz ## entfernen
+[b]/online[/b]: Setzt den Status auf online
+[b]/away[/b]: Setzt den Status auf away
+[b]/busy[/b]: Setzt den Status auf busy
+[b]/msg to text[/b]: Sendet eine private Nachricht
+[b]/set_pw oldpw newpw newpw[/b]: Neues Passwort setzen.
+[u]BBCodes[/u]:
+[b]url[/b]: Link erzeugen zum wo drauf klicken
+[b]img[/b]: Da wird ein Bild angezeigt
+[b]b[/b]: Fettschreiben
+[b]u[/b]: Unterschreiben
+[b]i[/b]: Schiefschreiben
+[b]code[/b]: Breitengleiche vordefinierte Schrift
 EOHELP
 
 our %german_status = (
