@@ -81,8 +81,7 @@ function update(data) {
             else {
                 $('#refresh_button').attr('disabled', 'disabled');
             }
-            if (val[2] != 'Online' )
-                $('#status').val(val[2].toLowerCase());
+            $('#status').val(val[2].toLowerCase());
         }
         var classstr = new Array(val[2]);
         if ( val[1] != "0" ) {
