@@ -50,6 +50,7 @@ function update(data) {
         }
         str += ' '+val[2];
         if (val[7] == 1) classstr.push('own_msg');
+        if (val[8] == 1) classstr.push('MentionedMsg');
         if ((val[6] >= 10) && (val[6] <= 12)){
             if (val[6] == 10) classstr.push('Online');
             if (val[6] == 11) classstr.push('Busy');

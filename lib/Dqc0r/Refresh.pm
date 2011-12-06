@@ -6,7 +6,8 @@ use Language;
 
 sub _prepare_msg {
     my ( $m, $s ) = @_;
-    $m->[7] = lc( $s->{user} ) eq lc( $m->[1] ) ? 1 : 0;
+    my $user = $s->{user};
+    $m->[7] = lc( $user ) eq lc( $m->[1] ) ? 1 : 0;
     $m->[3] = $1 if $m->[3] =~ m/\s(\d\d:\d\d)/xms;
     if ( $m->[2] =~ m{\A/(away|busy|online)}xmsi ) {
         $m->[2] = "» $m->[1] ist " . $Language::german_status{$1};
@@ -18,6 +19,7 @@ sub _prepare_msg {
 s{\[url\](.+?)\[/url\]}{<a href="$1" title="Externe Webseite" target="_blank">$1</a>}xmsig;
     $m->[2] =~
 s{\[img\](.+?)\[/img\]}{<a href="$1" title="Externes Bild" target="_blank"><img src="$1" title="Externes Bild" /></a>}xmsig;
+    $m->[8] = $m->[6] == 0 ? ( $m->[2] =~ s{\b($user)\b}{\[b\]$1\[/b\]}xgmsi ? 1 : 0 ) : 0;
     $m->[2] =~ s{\[([bui])\](.+?)\[/[bui]\]}{<$1>$2</$1>}xmsig;
     $m->[2] =~ s{\*(\w+)\*}{<b>$1</b>}xmsig;
     $m->[2] =~
