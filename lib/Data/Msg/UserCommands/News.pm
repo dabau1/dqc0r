@@ -15,6 +15,17 @@ EOSQL
     Data::dbh()->do( $sql, undef, $userid, $txt, $timestamp );
 }
 
+sub check_editability {
+    my ( $id, $userid, $admin) = @_;
+    return 1 if $admin;
+    my $sql = << 'EOSQL';
+SELECT 1 FROM not_notiz
+WHERE not_id=? AND ben_fk=?
+EOSQL
+    return ( Data::dbh()->selectrow_array($sql, undef, $id, $userid) )
+        ? 1 : 0
+}
+
 sub delete_news {
     my $id = shift;
     my $sql = << 'EOSQL';

@@ -20,12 +20,17 @@ sub add_news {
 
 sub del_news {
     my ( $self, $txt ) = @_;
-    my $user = $self->session->{user};
+    my $session = $self->session();
+    my $user = $session->{user};
     return
       'Nachrichten werden wie folgt gelöscht: [code]/del_news ##[/code]',
       2, $user
       unless $txt =~ m/\A\s*(\d+)/xms;
     my $id  = $1;
+    return
+      'Nachrichten dürfen nur vom Ersteller oder von Admins gelöscht werden',
+      2, $user
+      unless Data::Msg::UserCommands::News::check_editability($id, $session->{userid}, $session->{admin});
     Data::Msg::UserCommands::News::delete_news( $id );
     return "» $user hat eine Notiz entfernt", 1;
 }
