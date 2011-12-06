@@ -10,6 +10,7 @@ use utf8;
 our %Commands = (
     me          => sub { '» ' . $_[0]->session->{user} . " $_[1]", 1 },
     set_refresh => \&Dqc0r::Msg::UserCommands::Status::set_refresh,
+    set_pw      => \&Dqc0r::Msg::UserCommands::Status::set_pw,
     add_news    => \&Dqc0r::Msg::UserCommands::News::add_news,
     del_news    => \&Dqc0r::Msg::UserCommands::News::del_news,
     msg         => \&Dqc0r::Msg::UserCommands::Chat::msg,

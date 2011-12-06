@@ -39,5 +39,14 @@ sub set_refresh {
     return $txt, 1;
 }
 
+sub set_pw {
+    my ( $self, $txt ) = @_;
+    my $user = $self->session->{user};
+    return 'Passwort neu setzen geht so: [code]/set_pw oldpw newpw newpw[/code], wobei "oldpw" das alte Passwort ist, welches zur Bestätigung eingegeben werden muss, "newpw" ist das neue Passwort, welches zweimal nacheinander eingegeben werden muss. Zwischen "oldpw" und den beiden "newpw" darf jeweils nur ein Leerzeichen stehen! Neue Passwörter müssen im Übrigen zwischen 8 und 32 Zeichen lang sein.', 0, $user
+        unless  $txt =~ m/\A(\S+)\s(\S{8,32})\s(\2)\z/xms;
+    my ( $oldpw, $newpw ) = ( $1, $2 );
+    return Data::Msg::UserCommands::Status::set_pw( $user, $oldpw, $newpw ), 3, $user;
+}
+
 1;
 
